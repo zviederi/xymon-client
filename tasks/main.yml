@@ -1,0 +1,11 @@
+---
+- name: install required packages
+  package:
+    - name: gcc
+      stage: present
+    - name: make
+      stage: present
+    - name: fping
+      stage: present
+
+- debug: msg='Installation completed.'
