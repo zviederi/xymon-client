@@ -11,24 +11,33 @@ Requirements
 Role Variables
 --------------
 
-Will be updated later...
+```yaml
+xymon_client_directory: "/usr/local"
+```
+Directory to install xymon client
 
-Dependencies
-------------
+```yaml
+xymon_client_user_group: "xymon"
+```
+User group
 
-Will be updated later...
+```yaml
+xymon_server_address: 127.0.0.1
+```
+Xymon server IP address
 
 Example Playbook
 ----------------
 
-Will be updated later...
-
-License
--------
-
-MIT
+```yaml
+- hosts: servers
+- vars:
+    xymon_server_address: 127.0.0.1
+  roles:  
+    - xymon-client   # install xymon client
+```
 
 Author Information
 ------------------
 
-Ēriks Zviedrāns
+* [Ēriks Zviedrāns](mailto:eriks.zviedrans@tieto.com)
