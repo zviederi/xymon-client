@@ -1,2 +1,11 @@
 ---
-# vars file for xymon-client
+# xymon client necessary packages
+xymon_client_pkg_state: "present"
+xymon_client_pkg_list:
+  - gcc
+  - make
+  - fping
+  - pcre-devel
+  - openssl-devel
+  - openldap-devel
+  - rrdtool-devel

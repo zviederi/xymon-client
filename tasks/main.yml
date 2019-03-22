@@ -1,11 +1,75 @@
 ---
+#tasks for xymon client installation
+
 - name: install required packages
   package:
-    - name: gcc
-      stage: present
-    - name: make
-      stage: present
-    - name: fping
-      stage: present
+    name: "{{ item }}"
+    state: "{{ xymon_client_pkg_state }}"
+  with_items:
+    - "{{ xymon_client_pkg_list | to_nice_json }}"
+  register: install_result
+  until: install_result is success
 
-- debug: msg='Installation completed.'
+- name: "Ensure group {{ xymon_client_user_group }} exists"
+  group:
+    name: "{{ xymon_client_user_group }}"
+    state: present
+
+- name: add xymon user to group
+  user:
+    name: xymon
+    groups: "{{ xymon_client_user_group }}"
+    append: true
+
+- name: download and extract xymon client source
+  unarchive:
+    src: "https://iweb.dl.sourceforge.net/project/xymon/Xymon/{{ xymon_client_version }}/xymon-{{ xymon_client_version }}.tar.gz"
+    dest: /tmp
+    owner: "{{ xymon_client_user_group }}"
+    group: "{{ xymon_client_user_group }}"
+    remote_src: yes
+
+- name: remove Makefile if exists
+  file:
+    path: "/tmp/xymon-{{ xymon_client_version }}/Makefile"
+    state: absent
+
+- name: configure xymon client
+  shell: "./configure --client"
+  args:
+    chdir: "/tmp/xymon-{{ xymon_client_version }}"
+    stdin: true
+
+- name: ovverwrite xymon client Makefile
+  copy:
+    dest: "/tmp/xymon-{{ xymon_client_version }}/Makefile"
+    content: "{{lookup('template', 'Makefile')}}"
+    owner: "{{ xymon_client_user_group }}"
+    group: "{{ xymon_client_user_group }}"
+    mode: 0644
+
+- name: building xymon client
+  make:
+    chdir: "/tmp/xymon-{{ xymon_client_version }}"
+    target: install
+  become: true
+
+- name: copy xymon client init configuration file
+  copy:
+    src: "/tmp/xymon-{{ xymon_client_version }}/rpm/xymon-client.init"
+    dest: "/etc/init.d/xymon-client"
+    remote_src: yes
+    mode: +x
+
+- name: copy xymon default configuration file
+  copy:
+    dest: "/etc/default/xymon-client"
+    content: "{{lookup('template', 'xymon-client.default')}}"
+
+- name: Start xymon and enable start on boot
+  systemd:
+    name: xymon-client
+    state: started
+    enabled: yes
+
+- debug: msg='Installation completed'
