@@ -1,0 +1,6 @@
+---
+# xymon client redhat necessary packages
+xymon_client_pkg_list:
+  - gcc
+  - make
+  - fping

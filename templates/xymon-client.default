@@ -15,7 +15,8 @@ XYMONSERVERS="{{ xymon_server_address }}"
 # The defaults usually suffice for the rest of this file, 
 # but you can tweak the hostname that the client reports 
 # data with.
-# CLIENTHOSTNAME=""
+
+CLIENTHOSTNAME="{{ ansible_hostname }}"
 
 # Red Hat EL version 3 uses a different vmstat layout
 # than all other Linux versions. So for a client running this

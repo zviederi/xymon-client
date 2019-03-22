@@ -17,7 +17,7 @@ xymon_client_directory: "/usr/local"
 Directory to install xymon client
 
 ```yaml
-xymon_client_user_group: "xymon"
+xymon_client_user_group: xymon
 ```
 User group
 

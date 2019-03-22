@@ -1,5 +1,18 @@
 ---
 #tasks for xymon client installation
+- name: Include version-specific variables for CentOS/RHEL.
+  include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_distribution == 'CentOS' or
+    ansible_distribution == 'Red Hat Enterprise Linux' or
+    ansible_distribution == 'RedHat'
+
+- name: Include version-specific variables for Ubuntu.
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Include version-specific variables for Debian.
+  include_vars: "{{ ansible_distribution|title }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+  when: ansible_os_family == 'Debian'
 
 - name: install required packages
   package:
@@ -17,7 +30,7 @@
 
 - name: add xymon user to group
   user:
-    name: xymon
+    name: "{{ xymon_client_user_group }}"
     groups: "{{ xymon_client_user_group }}"
     append: true
 
@@ -72,4 +85,4 @@
     state: started
     enabled: yes
 
-- debug: msg='Installation completed'
+- debug: msg='xymon client installation completed'
