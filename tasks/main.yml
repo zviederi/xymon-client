@@ -41,6 +41,12 @@
     state: present
     line: "{{ xymon_client_user_group }} ALL=(ALL) NOPASSWD: ALL"
 
+- name: ensure XYMONUSER environment variable exists
+  lineinfile:
+    path: /etc/environment
+    state: present
+    line: 'XYMONUSER="{{ xymon_client_user_group }}"'
+
 - name: download and extract xymon.client source
   unarchive:
     src: "https://iweb.dl.sourceforge.net/project/xymon/Xymon/{{ xymon_client_version }}/xymon-{{ xymon_client_version }}.tar.gz"
@@ -60,12 +66,13 @@
     chdir: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}"
     stdin: true
   become: true
-  become_user: "{{ xymon_client_user_group }}"
 
 - name: ovverwrite xymon.client Makefile
   copy:
     dest: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}/Makefile"
     content: "{{lookup('template', 'Makefile')}}"
+    owner: "{{ xymon_client_user_group }}"
+    group: "{{ xymon_client_user_group }}"
     mode: "u=rwx,g=rw,o=r"
 
 - name: building xymon.client
@@ -73,6 +80,10 @@
     chdir: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}"
     target: install
   become: true
+
+- name: get xymon.client machine hostname
+  shell: hostname
+  register: xymon_client_hostname
 
 - name: set xymon.client file permissions
   file:
@@ -86,19 +97,22 @@
   copy:
     dest: "/etc/default/xymon-client"
     content: "{{lookup('template', 'xymon-client.default')}}"
+    owner: "{{ xymon_client_user_group }}"
+    group: "{{ xymon_client_user_group }}"
     mode: "u=rwx,g=r,o=r"
 
 - name: copy xymon.client init configuration file
   copy:
-    src: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}/rpm/xymon-client.init"
+    content: "{{lookup('template', 'xymon-client.init')}}"
     dest: "/etc/init.d/xymon-client"
-    remote_src: yes
+    owner: "{{ xymon_client_user_group }}"
+    group: "{{ xymon_client_user_group }}"
     mode: "u=rwx,g=rx,o=r"
 
-- name: Start xymon.client and enable start on boot
+- name: start xymon.client and enable start on boot
   service:
     name: xymon-client
     state: started
     enabled: yes
 
-- debug: msg='xymon.client installation completed'
+- debug: msg='xymon client installation completed'
