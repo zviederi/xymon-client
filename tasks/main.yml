@@ -28,61 +28,77 @@
     name: "{{ xymon_client_user_group }}"
     state: present
 
-- name: add xymon user to group
+- name: "add {{ xymon_client_user_group }} user to {{ xymon_client_user_group }} group"
   user:
     name: "{{ xymon_client_user_group }}"
     groups: "{{ xymon_client_user_group }}"
     append: true
 
-- name: download and extract xymon client source
+- name: "ensure user {{ xymon_client_user_group }} has password-less sudo"
+  lineinfile:
+    path: "/etc/sudoers.d/user-{{ xymon_client_user_group }}"
+    create: true
+    state: present
+    line: "{{ xymon_client_user_group }} ALL=(ALL) NOPASSWD: ALL"
+
+- name: download and extract xymon.client source
   unarchive:
     src: "https://iweb.dl.sourceforge.net/project/xymon/Xymon/{{ xymon_client_version }}/xymon-{{ xymon_client_version }}.tar.gz"
-    dest: /tmp
+    dest: "{{ xymon_client_src_directory }}"
     owner: "{{ xymon_client_user_group }}"
     group: "{{ xymon_client_user_group }}"
     remote_src: yes
 
 - name: remove Makefile if exists
   file:
-    path: "/tmp/xymon-{{ xymon_client_version }}/Makefile"
+    path: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}/Makefile"
     state: absent
 
-- name: configure xymon client
+- name: configure xymon.client
   shell: "./configure --client"
   args:
-    chdir: "/tmp/xymon-{{ xymon_client_version }}"
+    chdir: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}"
     stdin: true
+  become: true
+  become_user: "{{ xymon_client_user_group }}"
 
-- name: ovverwrite xymon client Makefile
+- name: ovverwrite xymon.client Makefile
   copy:
-    dest: "/tmp/xymon-{{ xymon_client_version }}/Makefile"
+    dest: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}/Makefile"
     content: "{{lookup('template', 'Makefile')}}"
-    owner: "{{ xymon_client_user_group }}"
-    group: "{{ xymon_client_user_group }}"
-    mode: 0644
+    mode: "u=rwx,g=rw,o=r"
 
-- name: building xymon client
+- name: building xymon.client
   make:
-    chdir: "/tmp/xymon-{{ xymon_client_version }}"
+    chdir: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}"
     target: install
   become: true
 
-- name: copy xymon client init configuration file
-  copy:
-    src: "/tmp/xymon-{{ xymon_client_version }}/rpm/xymon-client.init"
-    dest: "/etc/init.d/xymon-client"
-    remote_src: yes
-    mode: +x
+- name: set xymon.client file permissions
+  file:
+    path: "{{ xymon_client_directory }}"
+    owner: "{{ xymon_client_user_group }}"
+    group: "{{ xymon_client_user_group }}"
+    mode: "u=rwx,g=rwx,o=r"
+    recurse: yes
 
-- name: copy xymon default configuration file
+- name: copy xymon.client default configuration file
   copy:
     dest: "/etc/default/xymon-client"
     content: "{{lookup('template', 'xymon-client.default')}}"
+    mode: "u=rwx,g=r,o=r"
 
-- name: Start xymon and enable start on boot
-  systemd:
+- name: copy xymon.client init configuration file
+  copy:
+    src: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}/rpm/xymon-client.init"
+    dest: "/etc/init.d/xymon-client"
+    remote_src: yes
+    mode: "u=rwx,g=rx,o=r"
+
+- name: Start xymon.client and enable start on boot
+  service:
     name: xymon-client
     state: started
     enabled: yes
 
-- debug: msg='xymon client installation completed'
+- debug: msg='xymon.client installation completed'

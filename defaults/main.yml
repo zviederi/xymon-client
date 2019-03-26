@@ -1,5 +1,4 @@
 ---
 xymon_client_version: 4.3.28
 xymon_client_user_group: xymon
-xymon_client_directory: "/usr/local"
 xymon_server_address: 127.0.0.1

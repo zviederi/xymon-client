@@ -1,3 +1,5 @@
 ---
 # xymon client package state
 xymon_client_pkg_state: "present"
+xymon_client_directory: "/usr/lib/xymon/client"
+xymon_client_src_directory: "/usr/src"

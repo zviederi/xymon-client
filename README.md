@@ -19,7 +19,7 @@ Directory to install xymon client
 ```yaml
 xymon_client_user_group: xymon
 ```
-User group
+User group(default: xymon)
 
 ```yaml
 xymon_server_address: 127.0.0.1
@@ -33,6 +33,7 @@ Example Playbook
 - hosts: servers
 - vars:
     xymon_server_address: 127.0.0.1
+    xymon_client_user_group: a_mon
   roles:  
     - xymon-client   # install xymon client
 ```
