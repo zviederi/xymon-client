@@ -110,7 +110,7 @@
     mode: "u=rwx,g=rx,o=r"
 
 - name: start xymon.client and enable start on boot
-  service:
+  systemd:
     name: xymon-client
     state: started
     enabled: yes
