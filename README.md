@@ -33,7 +33,7 @@ Example Playbook
 - hosts: servers
 - vars:
     xymon_server_address: 127.0.0.1
-    xymon_client_user_group: a_mon
+    xymon_client_user_group: xymon
   roles:  
     - xymon-client   # install xymon client
 ```

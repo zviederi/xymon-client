@@ -13,12 +13,10 @@ galaxy_info:
         - 7
   - name: Debian
     versions:
-      - jessie
-      - stretch
+      - 9
   - name: Ubuntu
     versions:
-      - xenial
-      - bionic
+      - 16
 
 
   galaxy_tags:
