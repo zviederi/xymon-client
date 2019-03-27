@@ -109,6 +109,12 @@
     group: "{{ xymon_client_user_group }}"
     mode: "u=rwx,g=rx,o=r"
 
+- name: grant read access to log file
+  file:
+    path: /var/log/messages
+    state: touch
+    mode: "u=rw,g=r,o=r"
+
 - name: start xymon.client and enable start on boot
   systemd:
     name: xymon-client
