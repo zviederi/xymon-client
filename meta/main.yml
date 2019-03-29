@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Ēriks Zviedrāns
   description: Install xymon client
@@ -6,17 +7,17 @@ galaxy_info:
   license: license (MIT)
 
   min_ansible_version: 2.4
-  
+
   platforms:
-  - name: EL
-    versions:        
+    - name: EL
+      versions:
         - 7
-  - name: Debian
-    versions:
-      - 9
-  - name: Ubuntu
-    versions:
-      - 16
+    - name: Debian
+      versions:
+        - 9
+    - name: Ubuntu
+      versions:
+        - 16
 
 
   galaxy_tags:

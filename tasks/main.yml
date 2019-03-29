@@ -1,5 +1,5 @@
 ---
-#tasks for xymon client installation
+# tasks for xymon client installation
 - name: Include version-specific variables for CentOS/RHEL.
   include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_distribution == 'CentOS' or
@@ -61,16 +61,18 @@
     state: absent
 
 - name: configure xymon.client
-  shell: "./configure --client"
+  command: "./configure --client"
   args:
     chdir: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}"
     stdin: true
   become: true
+  changed_when: false
+  check_mode: no
 
 - name: ovverwrite xymon.client Makefile
   copy:
     dest: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}/Makefile"
-    content: "{{lookup('template', 'Makefile')}}"
+    content: "{{ lookup('template', 'Makefile') }}"
     owner: "{{ xymon_client_user_group }}"
     group: "{{ xymon_client_user_group }}"
     mode: "u=rwx,g=rw,o=r"
@@ -82,8 +84,9 @@
   become: true
 
 - name: get xymon.client machine hostname
-  shell: hostname
+  command: hostname
   register: xymon_client_hostname
+  changed_when: "(xymon_client_hostname | success) and 'Changed' in xymon_client_hostname.stdout"
 
 - name: set xymon.client file permissions
   file:
@@ -96,14 +99,14 @@
 - name: copy xymon.client default configuration file
   copy:
     dest: "/etc/default/xymon-client"
-    content: "{{lookup('template', 'xymon-client.default')}}"
+    content: "{{ lookup('template', 'xymon-client.default') }}"
     owner: "{{ xymon_client_user_group }}"
     group: "{{ xymon_client_user_group }}"
     mode: "u=rwx,g=r,o=r"
 
 - name: copy xymon.client init configuration file
   copy:
-    content: "{{lookup('template', 'xymon-client.init')}}"
+    content: "{{ lookup('template', 'xymon-client.init') }}"
     dest: "/etc/init.d/xymon-client"
     owner: "{{ xymon_client_user_group }}"
     group: "{{ xymon_client_user_group }}"
