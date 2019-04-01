@@ -4,3 +4,4 @@ xymon_client_pkg_list:
   - gcc
   - make
   - fping
+xymon_log_file: /var/log/syslog

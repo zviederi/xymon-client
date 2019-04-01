@@ -8,3 +8,4 @@ xymon_client_pkg_list:
   - openssl-devel
   - openldap-devel
   - rrdtool-devel
+xymon_log_file: /var/log/messages

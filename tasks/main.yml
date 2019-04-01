@@ -114,7 +114,7 @@
 
 - name: grant read access to log file
   file:
-    path: /var/log/messages
+    path: "{{ xymon_log_file }}"
     state: touch
     mode: "u=rw,g=r,o=r"
 
