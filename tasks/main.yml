@@ -54,11 +54,14 @@
     owner: "{{ xymon_client_user_group }}"
     group: "{{ xymon_client_user_group }}"
     remote_src: yes
+  register: source_downloaded
+  changed_when: source_downloaded is not defined
 
 - name: remove Makefile if exists
   file:
     path: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}/Makefile"
     state: absent
+  changed_when: false
 
 - name: configure xymon.client
   command: "./configure --client"
@@ -66,8 +69,8 @@
     chdir: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}"
     stdin: true
   become: true
-  changed_when: false
   check_mode: no
+  when: source_downloaded is not defined
 
 - name: ovverwrite xymon.client Makefile
   copy:
@@ -76,25 +79,29 @@
     owner: "{{ xymon_client_user_group }}"
     group: "{{ xymon_client_user_group }}"
     mode: "u=rwx,g=rw,o=r"
+  when: source_downloaded is not defined
 
 - name: building xymon.client
   make:
     chdir: "{{ xymon_client_src_directory }}/xymon-{{ xymon_client_version }}"
     target: install
   become: true
+  when: source_downloaded is not defined
 
 - name: get xymon.client machine hostname
   command: hostname
   register: xymon_client_hostname
-  changed_when: "(xymon_client_hostname | success) and 'Changed' in xymon_client_hostname.stdout"
+  changed_when: false
 
-- name: set xymon.client file permissions
+- name: grant xymon.client file permissions
   file:
     path: "{{ xymon_client_directory }}"
     owner: "{{ xymon_client_user_group }}"
     group: "{{ xymon_client_user_group }}"
     mode: "u=rwx,g=rwx,o=r"
     recurse: yes
+  register: grant_file_permission
+  changed_when: grant_file_permission is not defined
 
 - name: copy xymon.client default configuration file
   copy:
@@ -117,9 +124,12 @@
     path: "{{ xymon_log_file }}"
     state: touch
     mode: "u=rw,g=r,o=r"
+  register: grant_log_file_permission
+  changed_when: grant_log_file_permission is not defined
 
 - name: start xymon.client and enable start on boot
   systemd:
+    daemon-reload: yes
     name: xymon-client
     state: started
     enabled: yes

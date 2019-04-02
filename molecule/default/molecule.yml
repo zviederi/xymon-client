@@ -7,7 +7,9 @@ lint:
   name: yamllint
 platforms:
   - name: instance
-    image: centos:7
+    image: ubuntu:16.04
+    privileged: True
+    command: /sbin/init
 provisioner:
   name: ansible
   lint:
@@ -16,3 +18,15 @@ verifier:
   name: testinfra
   lint:
     name: flake8
+
+scenario:
+  name: default
+  test_sequence:
+    - lint
+    - destroy
+    - syntax
+    - create
+    - converge
+    - idempotence
+    - verify
+    - destroy

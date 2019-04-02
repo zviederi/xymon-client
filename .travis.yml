@@ -1,0 +1,21 @@
+---
+language: python
+services: docker
+
+env:
+  global:
+    - ROLE_NAME: xymon-client
+
+install:
+  # Install test dependencies.
+  - pip install molecule dockers
+
+before_script:
+  # use ansible-galaxy role name for directory
+  - cd ../
+  - mv $TRAVIS_BUILD_DIR $ROLE_NAME
+  - cd $ROLE_NAME  
+
+script:
+  # Run tests.
+  - molecule test
