@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/zviederi/xymon-client.svg?branch=master)](https://travis-ci.com/zviederi/xymon-client)
+
 Xymon Client
 =========
 

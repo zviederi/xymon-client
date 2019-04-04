@@ -8,14 +8,8 @@ env:
 
 install:
   # Install test dependencies.
-  - pip install molecule dockers
-
-before_script:
-  # use ansible-galaxy role name for directory
-  - cd ../
-  - mv $TRAVIS_BUILD_DIR $ROLE_NAME
-  - cd $ROLE_NAME  
+  - pip install molecule docker
 
 script:
-  # Run tests.
+  # Run tests with molecule.
   - molecule test
