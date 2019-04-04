@@ -41,4 +41,4 @@ Example Playbook
 Author Information
 ------------------
 
-* [Ēriks Zviedrāns](mailto:eriks.zviedrans@tieto.com)
+* [Ēriks Zviedrāns](mailto:eriks.zviedrans@gmail.com)
