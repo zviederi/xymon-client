@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Ēriks Zviedrāns
-  description: Install xymon client
+  description: Install xymon client using ansible
   company: Tieto Latvia
 
   license: license (MIT)
