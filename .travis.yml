@@ -3,10 +3,8 @@ language: python
 services: docker
 
 env:
-  global:
-    - ROLE_NAME: xymon-client
-    - SCENARIO: default
-    - SCENARIO: default-debian_stretch
+  - SCENARIO=default
+  - SCENARIO=default-debian_stretch
 
 install:
   # Install test dependencies.
