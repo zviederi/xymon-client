@@ -5,11 +5,17 @@ services: docker
 env:
   global:
     - ROLE_NAME: xymon-client
+    - SCENARIO: default
+    - SCENARIO: default-debian_stretch
 
 install:
   # Install test dependencies.
   - pip install molecule docker
 
-script:
+script: |
   # Run tests with molecule.
-  - molecule test
+  if [ "${SCENARIO}" == "default" ]; then
+    molecule test
+  else
+    molecule test -s "${SCENARIO}"
+  fi
