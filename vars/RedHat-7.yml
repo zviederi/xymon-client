@@ -3,7 +3,6 @@
 xymon_client_pkg_list:
   - gcc
   - make
-  - fping
   - pcre-devel
   - openssl-devel
   - openldap-devel

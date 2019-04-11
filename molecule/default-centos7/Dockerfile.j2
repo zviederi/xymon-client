@@ -1,0 +1,3 @@
+FROM {{ item.image }}   
+
+RUN yum install -y centos-release-scl; yum clean all;

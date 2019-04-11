@@ -4,6 +4,7 @@ services: docker
 
 env:
   - SCENARIO=default
+  - SCENARIO=default-centos7
   - SCENARIO=default-debian_stretch
 
 install:
