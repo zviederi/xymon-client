@@ -10,6 +10,7 @@ platforms:
     image: ubuntu:16.04
     privileged: True
     command: /sbin/init
+    pre_build_image: True
 provisioner:
   name: ansible
   lint:

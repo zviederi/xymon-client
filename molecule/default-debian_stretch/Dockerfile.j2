@@ -1,5 +1,0 @@
-FROM {{ item.image }}   
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-       python-setuptools python-dev systemd-sysv \
-       python-pip systemd systemd-cron sudo && apt-get clean

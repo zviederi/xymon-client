@@ -10,6 +10,7 @@ platforms:
     image: centos:7
     privileged: True
     command: /usr/sbin/init
+    pre_build_image: True
 provisioner:
   name: ansible
   lint:
