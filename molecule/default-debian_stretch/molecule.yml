@@ -9,7 +9,7 @@ platforms:
   - name: default-debian_stretch
     image: debian:stretch
     privileged: True
-    pre_build_image: True
+    command: /sbin/init
 provisioner:
   name: ansible
   lint:

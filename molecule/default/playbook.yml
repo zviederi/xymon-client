@@ -3,7 +3,7 @@
   hosts: all
   gather_facts: false
   pre_tasks:
-  - name: Install python2 for Ansible
+  - name: Install python2 for ansible
     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-software-properties)
     register: output
     changed_when: output.stdout | length > 0
