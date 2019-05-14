@@ -3,7 +3,7 @@
 Xymon Client
 =========
 
-Install xymon client on host machine
+Compile and install a xymon client on host machine from source
 
 Requirements
 ------------

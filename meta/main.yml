@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Ēriks Zviedrāns
-  description: Install xymon client using ansible
+  description: Compile and install a xymon client on host machine from source
   company: Tieto Latvia
 
   license: license (MIT)
