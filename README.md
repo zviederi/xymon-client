@@ -16,7 +16,7 @@ Role Variables
 ```yaml
 xymon_client_directory: "/usr/local"
 ```
-Directory to install xymon client
+Directory where  to install xymon client
 
 ```yaml
 xymon_client_user_group: xymon

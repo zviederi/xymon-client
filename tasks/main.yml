@@ -134,4 +134,4 @@
     state: started
     enabled: yes
 
-- debug: msg='xymon client installation completed'
+- debug: msg='Xymon Client {{ xymon_client_version }} installation completed'
